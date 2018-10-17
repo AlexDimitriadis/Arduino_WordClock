@@ -5,6 +5,8 @@
 
 #define PIN 6
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(100, PIN, NEO_GRB + NEO_KHZ800);
+
+//WordClock variables
 int One[] = {0,2};
 int Two[] = {3,5};
 int Three[] = {15,19};
@@ -15,7 +17,7 @@ int Seven[] = {6,9};
 int Eight[] = {36,39};
 int Nine[] = {50,54};
 int Ten[] = {40,43};
-int Eleven[] = {31,35};
+int Eleven[] = {31,36};
 int Twelve[] = {44,49};
 int Kai[] = {60,62};
 int Para[] = {65,68};
@@ -25,10 +27,28 @@ int Tetarto[] = {81,87};
 int Eikosi[] = {70,75};
 int Misi[] = {90,93};
 
-uint32_t c =  strip.Color(20, 100, 250);
+uint32_t c =  strip.Color(40, 0, 255);
+
 int Hour = 0;
 int Min = 0;
 int HourWord[2], ConnectWord[2], MinuteWord[2];
+
+//Led 2-D array 
+int led[10][10];
+int i = 0, j=0;
+
+//Digital Clock variables
+//Fisrt elemenet is length
+//Hours
+int H1_Zero[] = {12,0,1,2,10,12,20,22,30,32,40,41,42};  
+int H1_One[] = {5,2,17,22,37,42};
+int H1_Two[] = {11,0,1,2,17,20,21,22,39,40,41,42};
+//int H2_Zero[] = {12,4,5,6,13,15,24,26,33,35,43,43,45};
+//int H2_One[] = {5,6,13,26,33,46};
+//int H2_Two[] = {12,4,5,6,13,15,24,26,33,35,43,43,45};
+//int H2_Zero[] = {12,4,5,6,13,15,24,26,33,35,43,43,45};
+//int H2_Zero[] = {12,4,5,6,13,15,24,26,33,35,43,43,45};
+
 
 void setup() {
   #if defined (__AVR_ATtiny85__)
@@ -36,9 +56,21 @@ void setup() {
   #endif
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
+  //Create led 2-d Array
+  for (i=0; i<10; i++) {
+    j = 0;
+    for (j; j<10; j++){
+      if  (i%2 == 0){
+        led[i][j] = 10*i + j;   
+      }else{
+        led[i][j] = 10*(i+1) - (j+1);
+      }
+    }  
+  }  
 }
 
 void loop() {
+//  ArrayTest();
   clearStrip();
  
   if (Hour == 0 | Hour == 12){ HourWord[0] = Twelve[0]; HourWord[1] = Twelve[1];}
@@ -54,7 +86,7 @@ void loop() {
   else if (Hour == 10 | Hour == 22) { HourWord[0] = Ten[0]; HourWord[1] = Ten[1]; }
   else {
       HourWord[0] = Eleven[0]; HourWord[1] = Eleven[1];
-      if (Hour == 23) Hour = 0;}
+      if (Hour == 23) Hour = -1;}
   
   if (Min <= 30) { 
     ConnectWord[0] = Kai[0]; ConnectWord[1] = Kai[1];
@@ -99,5 +131,17 @@ void clearStrip(){
       strip.setPixelColor(i, 0);
   }
   strip.show();
+}
+
+void ArrayTest(){
+uint32_t c =  strip.Color(0, 0, 255);
+ 
+  for (i = 0; i<10; i++){
+    for (j = 0; j<10; j++){
+      strip.setPixelColor(led[i][j], c);
+      strip.show();
+      delay(50);
+      }
+    }  
 
 }
